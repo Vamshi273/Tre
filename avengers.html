@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Treasure Hunt -- Round 10</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: purple;
+      font-family: Arial, sans-serif;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+    }
+    header {
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header img {
+      max-height: 200px;
+      max-width: 80%;
+      object-fit: contain;
+    }
+    .game-area {
+      flex: 1;
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+      padding: 20px;
+    }
+    .question {
+      font-size: 14px;
+      margin: 20px 0 10px;
+    }
+    .instructions {
+      border: 2px solid white;
+      padding: 15px;
+      margin: 20px auto;
+      text-align: left;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .instructions h3 {
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 20px;
+      color: #ffd700;
+    }
+    .instructions b {
+      display: block;
+      margin-bottom: 10px;
+    }
+    .answer-box {
+      margin: 20px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .answer-box input {
+      width: 80%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: none;
+      text-align: center;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #ffd700;
+      color: black;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #ffea70;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div id="college">
+      <img src="logo.png" alt="College Logo">
+    </div>
+    <div id="event">
+      <img src="event_logo.png" alt="Event Logo">
+    </div>
+  </header>
+
+  <div class="game-area">
+    <div class="question">
+      <h2>Round 10</h2>
+      <h2>Spot the place</h2>
+      <h2>I open and shut for everyone, I'm passed through many, then I speak. What am I?</h2>
+    </div>
+
+    <div class="instructions">
+      <h3>Instructions</h3>
+      <b>1. Read the question properly and then you will find the answer.</b>
+    </div>
+
+    <div class="answer-box">
+      <input type="text" id="userAnswer" placeholder="Enter your answer here">
+      <button onclick="checkAnswer()">Submit</button>
+    </div>
+  </div>
+
+  <script>
+    // ✅ Anti-cheat: redirect if user switches tab or minimizes
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        window.location.href = "index.html";
+      }
+    });
+
+    function checkAnswer() {
+      const userAnswer = document.getElementById("userAnswer").value.trim().toLowerCase();
+      const correctAnswer = "seong gi-hun"; // ✅ correct solution
+
+      if (userAnswer === correctAnswer.toLowerCase()) {
+        alert("🎉 Correct! Moving to Round 11...");
+        window.location.href = "avatar.html"; // ✅ next round
+      } else {
+        alert("❌ Wrong answer. Try again!");
+      }
+    }
+  </script>
+</body>
+</html>
