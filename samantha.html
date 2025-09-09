@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Treasure Hunt -- Round 13</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: maroon;
+      font-family: Arial, sans-serif;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+    }
+    header {
+      width: 100%;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header img {
+      max-height: 150px;
+      max-width: 60%;
+      object-fit: contain;
+    }
+    .game-area {
+      flex: 1;
+      width: 100%;
+      max-width: 600px;
+      text-align: center;
+      padding: 20px;
+    }
+    h2 {
+      margin: 20px 0 15px;
+      font-size: 32px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .hint {
+      font-size: 20px;
+      margin-bottom: 20px;
+      font-style: italic;
+      text-align: center;
+    }
+    .instructions {
+      font-size: 16px;
+      margin: 20px auto;
+      text-align: left;
+      background: rgba(0,0,0,0.4);
+      padding: 15px;
+      border-radius: 10px;
+      max-width: 500px;
+      line-height: 1.5;
+    }
+    .instructions p {
+      margin-top: 0;
+      font-weight: bold;
+      text-align: center;
+    }
+    input {
+      width: 80%;
+      max-width: 350px;
+      padding: 12px;
+      font-size: 18px;
+      border-radius: 5px;
+      border: none;
+      background-color: black;
+      color: white;
+      text-align: center;
+      margin: 20px 0;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #fff;
+      color: maroon;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #ddd;
+    }
+    .message {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="College Logo">
+    <img src="event_logo.png" alt="Event Logo">
+  </header>
+
+  <div class="game-area">
+    <h2>Round 13</h2>
+    <h2>Spot the Place</h2>
+    <div class="hint">Hint: Easy to hold, harder to throw</div>
+
+    <div class="instructions">
+      <p>Instructions:</p>
+      <ol>
+        <li>Arrange the cut pieces to complete the picture.</li>
+        <li>Flip the completed picture to find the hidden password.</li>
+      </ol>
+    </div>
+
+    <input type="text" id="answer" placeholder="Enter password here...">
+    <br>
+    <button onclick="checkAnswer()">Submit</button>
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+    // ----------------------
+    // Normalize input
+    // ----------------------
+    function normalizeInput(str) {
+      return str.toLowerCase().replace(/\s+/g, "");
+    }
+
+    // ----------------------
+    // Allowed answers
+    // ----------------------
+    const allowedAnswers = [
+      "motherboard","harddrive","operatingsystem","browser","algorithm","database",
+      "artificialintelligence","machinelearning","blockchain","cloudcomputing","malware",
+      "datamining","visualization","networkarchitecture","userexperience","firewall",
+      "virtualprivatenetwork","bigdata","router","server","centralprocessingunit",
+      "graphicsprocessingunit","encryption","description","javascript","transistors",
+      "cache","ipaddress","frontend","backend","omen","mongodb"
+    ];
+
+    // ----------------------
+    // Backend URL (Render)
+    // ----------------------
+    const backendURL = "https://techhunt-mobe.onrender.com"; // replace with your Render URL
+
+    // ----------------------
+    // Check Answer Function
+    // ----------------------
+    function checkAnswer() {
+      const userInput = normalizeInput(document.getElementById("answer").value);
+      const messageDiv = document.getElementById("message");
+
+      if (!allowedAnswers.includes(userInput)) {
+        messageDiv.textContent = "❌ Invalid answer!";
+        messageDiv.style.color = "red";
+        return;
+      }
+
+      // check if answer is used dynamically
+      fetch(`${backendURL}/check-answer?round=13&answer=${userInput}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.used) {
+            messageDiv.textContent = "❌ This answer is already used!";
+            messageDiv.style.color = "red";
+          } else {
+            // mark answer as used
+            fetch(`${backendURL}/mark-used`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ round: "13", answer: userInput })
+            })
+            .then(res => res.json())
+            .then(() => {
+              messageDiv.textContent = "✅ Correct! Moving to congratulations page...";
+              messageDiv.style.color = "green";
+              setTimeout(() => {
+                window.location.href = "congratulations.html";
+              }, 1500);
+            });
+          }
+        })
+        .catch(() => {
+          messageDiv.textContent = "❌ Server error. Try again later!";
+          messageDiv.style.color = "red";
+        });
+    }
+  </script>
+</body>
+</html>
