@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Treasure Hunt -- Round 4</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: orange; 
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      color: #fff;
+    }
+
+    header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 30px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      box-sizing: border-box;
+    }
+
+    header img {
+      max-height: 150px;
+      max-width: 60%;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .puzzle {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 2px;
+      background: #222;
+      padding: 5px;
+      border-radius: 8px;
+    }
+
+    .tile {
+      width: 100px;
+      height: 100px;
+      background-image: url("collegelogo.jpg");
+      background-size: 300px 300px;
+      cursor: pointer;
+    }
+
+    .empty {
+      width: 100px;
+      height: 100px;
+      background: #444;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="College Logo">
+    <img src="event_logo.png" alt="Event Logo">
+  </header> 
+
+  <h2>Round 4</h2>
+  <h2>Rearrange the image</h2>
+  <div class="puzzle" id="puzzle"></div>
+
+  <script>
+    const puzzle = document.getElementById("puzzle");
+
+    // ✅ Only tab switch detection AFTER page fully loaded
+    let pageLoaded = false;
+    window.addEventListener("load", () => {
+      pageLoaded = true;
+    });
+
+    document.addEventListener("visibilitychange", () => {
+      // Only redirect if page is already loaded and tab is hidden
+      if (pageLoaded && document.hidden) {
+        window.location.href = "index.html";
+      }
+    });
+
+    let positions = [0,1,2,3,4,5,6,7,null];
+
+    function shuffleEasy(steps = 10) {
+      for (let i = 0; i < steps; i++) {
+        const emptyIndex = positions.indexOf(null);
+        const validMoves = [emptyIndex - 1, emptyIndex + 1, emptyIndex - 3, emptyIndex + 3]
+          .filter(idx => idx >= 0 && idx < 9);
+        const moveIndex = validMoves[Math.floor(Math.random() * validMoves.length)];
+        [positions[emptyIndex], positions[moveIndex]] = [positions[moveIndex], positions[emptyIndex]];
+      }
+    }
+
+    shuffleEasy();
+
+    function createTiles() {
+      puzzle.innerHTML = "";
+      positions.forEach((pos, i) => {
+        const tile = document.createElement("div");
+        if (pos !== null) {
+          tile.classList.add("tile");
+          const x = pos % 3;
+          const y = Math.floor(pos / 3);
+          tile.style.backgroundPosition = `-${x * 100}px -${y * 100}px`;
+          tile.addEventListener("click", () => moveTile(i));
+        } else {
+          tile.classList.add("empty");
+        }
+        puzzle.appendChild(tile);
+      });
+    }
+
+    function moveTile(index) {
+      const emptyIndex = positions.indexOf(null);
+      const validMoves = [emptyIndex - 1, emptyIndex + 1, emptyIndex - 3, emptyIndex + 3];
+      if (validMoves.includes(index)) {
+        [positions[index], positions[emptyIndex]] = [positions[emptyIndex], positions[index]];
+        createTiles();
+        checkWin();
+      }
+    }
+
+    function checkWin() {
+      const solved = [0,1,2,3,4,5,6,7,null];
+      if (JSON.stringify(positions) === JSON.stringify(solved)) {
+        alert("🎉 Congratulations! You solved Round 4. Moving to Round 5...");
+        setTimeout(() => {
+          window.location.href = "word.html";
+        }, 800);
+      }
+    }
+
+    createTiles();
+  </script>
+</body>
+</html>
