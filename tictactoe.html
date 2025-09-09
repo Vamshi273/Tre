@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Treasure Hunt — Round 7 (Tic Tac Toe)</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: orange; /* Medium round theme */
+      font-family: Arial, sans-serif;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header img {
+      max-height: 150px;
+      max-width: 60%;
+    }
+
+    .game-container {
+      flex: 1;
+      width: 100%;
+      max-width: 480px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    h2 {
+      margin: 10px 0 20px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 8px;
+    }
+
+    .cell {
+      width: 100px;
+      height: 100px;
+      background: #fff;
+      color: #000;
+      font-size: 48px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    .cell.filled {
+      cursor: default;
+    }
+
+    .message {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    button {
+      margin-top: 15px;
+      padding: 10px 16px;
+      font-size: 16px;
+      background-color: #fff;
+      color: orange;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="College Logo">
+    <img src="event_logo.png" alt="Event Logo">
+  </header>
+
+  <div class="game-container">
+    <h2>Round 7</h2>
+    <h2>Tic Tac Toe</h2>
+    <div class="board" id="board"></div>
+    <div class="message" id="message"></div>
+    <button onclick="restart()">Restart Game</button>
+  </div>
+
+  <script>
+    const currentRound = "round7";
+
+    // ✅ Anti-cheat: redirect if user switches tab or minimizes
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        window.location.href = "index.html"; // go back to first round
+      }
+    });
+
+    const boardEl = document.getElementById("board");
+    const msgEl = document.getElementById("message");
+    let board = Array(9).fill("");
+    let gameOver = false;
+
+    const WIN_COMBOS = [
+      [0,1,2],[3,4,5],[6,7,8],
+      [0,3,6],[1,4,7],[2,5,8],
+      [0,4,8],[2,4,6]
+    ];
+
+    // Create board
+    board.forEach((_, i) => {
+      const cell = document.createElement("div");
+      cell.classList.add("cell");
+      cell.dataset.index = i;
+      cell.addEventListener("click", () => handleMove(i));
+      boardEl.appendChild(cell);
+    });
+
+    function handleMove(i) {
+      if (gameOver || board[i] !== "") return;
+      board[i] = "X";
+      render();
+      if (checkWinner(board, "X")) return endGame("🎉 You win!", true);
+      if (isDraw()) return endGame("🤝 It's a draw!", false);
+
+      setTimeout(aiMove, 400);
+    }
+
+    function aiMove() {
+      let move = findBestMove("O");
+      if (move === null) move = findBestMove("X");
+      if (move === null) {
+        const empty = board.map((v,i) => v==="" ? i : null).filter(v=>v!==null);
+        move = empty[Math.floor(Math.random() * empty.length)];
+      }
+      board[move] = "O";
+      render();
+      if (checkWinner(board, "O")) return endGame("💻 AI wins!", false);
+      if (isDraw()) return endGame("🤝 It's a draw!", false);
+    }
+
+    function findBestMove(player) {
+      for (let combo of WIN_COMBOS) {
+        let vals = combo.map(i => board[i]);
+        if (vals.filter(v => v === player).length === 2 && vals.includes("")) {
+          return combo[vals.indexOf("")];
+        }
+      }
+      return null;
+    }
+
+    function checkWinner(b, player) {
+      return WIN_COMBOS.some(combo => combo.every(i => b[i] === player));
+    }
+
+    function isDraw() {
+      return board.every(cell => cell !== "");
+    }
+
+    function endGame(message, playerWon) {
+      gameOver = true;
+      msgEl.textContent = message;
+
+      setTimeout(() => {
+        if (playerWon) {
+          window.location.href = "video.html"; // ✅ Next round
+        } else {
+          restart(); // Restart automatically if lose/draw
+        }
+      }, 1500);
+    }
+
+    function render() {
+      document.querySelectorAll(".cell").forEach((cell, i) => {
+        cell.textContent = board[i];
+        if (board[i] !== "") cell.classList.add("filled");
+      });
+    }
+
+    function restart() {
+      board = Array(9).fill("");
+      gameOver = false;
+      msgEl.textContent = "";
+      render();
+    }
+  </script>
+</body>
+</html>
