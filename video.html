@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Round 8</title>
+  <style>
+    :root {
+      --bg: orange;
+      --card: #ffffff;
+      --text: #000000; 
+      --muted: #555555;
+      --ring: #3b82f6;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: grid;
+      place-items: start center;
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .wrap { width: min(920px, 100%); }
+    h1 {
+      margin: 0 0 20px;
+      font-size: clamp(28px, 3.5vw, 40px);
+      font-weight: 800;
+      text-align: center;
+    }
+    h2 {
+      margin: 16px 0;
+      font-size: 20px;
+      font-weight: 600;
+      text-align: center;
+      color: var(--text); 
+    }
+    header {
+      width: 100%;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    header img {
+      max-height: 150px;  
+      max-width: 60%;
+      object-fit: contain;
+    }
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      padding: 18px;
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .media {
+      position: relative;
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #000;
+    }
+    .media video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .answer {
+      margin-top: 16px;
+      display: grid;
+      gap: 10px;
+    }
+    label {
+      font-size: 14px;
+      color: var(--muted);
+    }
+    input[type="text"] {
+      padding: 14px 16px;
+      font-size: 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(0,0,0,0.15);
+      outline: none;
+      background: #fff;
+      width: 100%;
+      transition: box-shadow .15s ease, border-color .15s ease;
+    }
+    input[type="text"]:focus {
+      border-color: var(--ring);
+      box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+    }
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    button {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      background: var(--ring);
+      color: #fff;
+    }
+    button:active { transform: translateY(1px); }
+  </style>
+  <script>
+    const currentRound = "round8";
+
+    // ✅ Anti-cheat: redirect if user switches tab or minimizes
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        window.location.href = "index.html"; // go back to first round
+      }
+    });
+
+    function checkAnswer() {
+      const ans = document.getElementById('ans').value.trim().toLowerCase();
+      if (ans === 'jonex') {
+        window.location.href = 'jumbled.html'; // ✅ Next round
+      } else {
+        alert('❌ Incorrect answer, please try again.');
+      }
+    }
+  </script>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <img src="logo.png" alt="College Logo">
+      <img src="event-logo.png" alt="Event Logo">
+    </header>
+
+    <h2>Round 8</h2>
+    <h2>Find The Hidden Word</h2>
+
+    <section class="card" aria-label="Question video">
+      <div class="media">
+        <video src="video.mp4" controls></video>
+      </div>
+
+      <h2>The hidden word is the password 🔑 So guess the answer…?</h2>
+
+      <div class="answer" aria-label="Answer box">
+        <label for="ans">Enter your answer</label>
+        <div class="row">
+          <input id="ans" type="text" placeholder="Type your answer here..." />
+          <button type="button" onclick="checkAnswer()">Submit</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
