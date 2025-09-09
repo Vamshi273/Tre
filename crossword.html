@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Treasure Hunt — Round 3</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: orange;
+      font-family: Arial, sans-serif;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header img {
+      max-height: 150px;
+      max-width: 60%;
+    }
+
+    .puzzle-container {
+      flex: 1;
+      width: 100%;
+      max-width: 600px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .grid {
+      display: inline-block;
+      margin: 20px 0;
+      border: 3px solid #fff;
+      border-radius: 8px;
+      padding: 10px;
+      background: #fff;
+      color: black;
+      font-family: monospace;
+      font-size: 20px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      margin-top: 10px;
+      text-transform: uppercase;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #fff;
+      color: orange;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .message {
+      margin-top: 15px;
+      font-size: 16px;
+    }
+
+    .message.success { color: #FFD700; font-weight: bold; }
+    .message.error { color: #ffcccb; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="College Logo">
+    <img src="event_logo.png" alt="Event Logo">
+  </header>
+
+  <div class="puzzle-container">
+    <h2>Round 3</h2>
+    <h2>Word Search Puzzle</h2>
+    <p>Find and type the hidden computer-related word from the puzzle:</p>
+
+    <div class="grid">
+      A G H Y I V R F U N A<br>
+      S I M O U S E U W O N<br>
+      E N Y H E L H R R H T<br>
+      M T Q T X S A E R T Y<br>
+      O E M M G A S T O Y R<br>
+      N R M L D W U U U P A<br>
+      Y N E O O B M P T W N<br>
+      F E T R R S K M E M I<br>
+      A T D W A Y W O R Q B<br>
+      L F K W I K T C D V Z<br>
+      O D R A O D Y E K Q G<br>
+    </div>
+
+    <input type="text" id="answer" placeholder="Enter the word you found">
+    <button onclick="checkPuzzle()">Submit Answer</button>
+
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+    function checkPuzzle() {
+      const correctWord = "binary";
+      const userAnswer = document.getElementById("answer").value.trim().toLowerCase();
+      const messageDiv = document.getElementById("message");
+
+      if (!userAnswer) {
+        messageDiv.textContent = "Please enter a word!";
+        messageDiv.className = "message error";
+        return;
+      }
+
+      if (userAnswer === correctWord) {
+        alert("🎉 Congratulations! You solved Round 3. Moving to Round 4...");
+        messageDiv.textContent = "Correct! Moving to next round...";
+        messageDiv.className = "message success";
+        document.querySelector("button").disabled = true;
+
+        setTimeout(() => {
+          window.location.href = "shuffle.html"; // go to round 4
+        }, 1000);
+      } else {
+        messageDiv.textContent = "Incorrect! Try again.";
+        messageDiv.className = "message error";
+      }
+    }
+
+    // Allow pressing Enter key
+    document.getElementById("answer").addEventListener("keypress", function(e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        checkPuzzle();
+      }
+    });
+  </script>
+</body>
+</html>
