@@ -3,64 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Treasure Hunt -- Round 4</title>
+  <title>Treasure Hunt -- Round 5</title>
   <style>
     body {
       margin: 0;
       padding: 0;
-      background-color: orange; 
+      background-color: orange;
+      font-family: Arial, sans-serif;
+      color: #333;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      min-height: 100vh;
       align-items: center;
-      height: 100vh;
-      font-family: Arial, sans-serif;
-      color: #fff;
     }
 
     header {
       width: 100%;
+      padding: 10px 30px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 30px;
-      position: absolute;
-      top: 0;
-      left: 0;
       box-sizing: border-box;
     }
 
     header img {
       max-height: 150px;
       max-width: 60%;
+      object-fit: contain;
+    }
+
+    .game-area {
+      flex: 1;
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .game-area img {
+      max-width: 250px;
+      height: auto;
+      display: block;
+      margin: 0 auto 20px;
     }
 
     h2 {
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
-    .puzzle {
-      display: grid;
-      grid-template-columns: repeat(3, 100px);
-      grid-template-rows: repeat(3, 100px);
-      gap: 2px;
-      background: #222;
-      padding: 5px;
+    .answers {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .answers input {
+      width: 80%;
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+      text-align: center;
+      outline: none;
+    }
+
+    .correct {
+      border: 2px solid green !important;
+      background-color: #e6ffe6;
+    }
+
+    .wrong {
+      border: 2px solid red !important;
+      background-color: #ffe6e6;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
       border-radius: 8px;
-    }
-
-    .tile {
-      width: 100px;
-      height: 100px;
-      background-image: url("collegelogo.jpg");
-      background-size: 300px 300px;
+      background: #333;
+      color: white;
       cursor: pointer;
     }
 
-    .empty {
-      width: 100px;
-      height: 100px;
-      background: #444;
+    button:hover {
+      background: #555;
     }
   </style>
 </head>
@@ -68,80 +98,67 @@
   <header>
     <img src="logo.png" alt="College Logo">
     <img src="event_logo.png" alt="Event Logo">
-  </header> 
+  </header>
 
-  <h2>Round 4</h2>
-  <h2>Rearrange the image</h2>
-  <div class="puzzle" id="puzzle"></div>
+  <div class="game-area">
+    <h2>Round 5</h2>
+    <img src="clock.jpg" alt="Wall Clock at 10:10">
+    
+    <h2>Guess the words related to the above image?</h2>
+    
+    <div class="answers">
+      <input type="text" placeholder="Answer 1">
+      <input type="text" placeholder="Answer 2">
+      <input type="text" placeholder="Answer 3">
+    </div>
+    
+    <button onclick="checkAnswers()">Submit</button>
+  </div>
 
   <script>
-    const puzzle = document.getElementById("puzzle");
+    const correct = ["time", "alarm", "10:10"];
 
-    // ✅ Only tab switch detection AFTER page fully loaded
-    let pageLoaded = false;
-    window.addEventListener("load", () => {
-      pageLoaded = true;
-    });
-
-    document.addEventListener("visibilitychange", () => {
-      // Only redirect if page is already loaded and tab is hidden
-      if (pageLoaded && document.hidden) {
-        window.location.href = "index.html";
-      }
-    });
-
-    let positions = [0,1,2,3,4,5,6,7,null];
-
-    function shuffleEasy(steps = 10) {
-      for (let i = 0; i < steps; i++) {
-        const emptyIndex = positions.indexOf(null);
-        const validMoves = [emptyIndex - 1, emptyIndex + 1, emptyIndex - 3, emptyIndex + 3]
-          .filter(idx => idx >= 0 && idx < 9);
-        const moveIndex = validMoves[Math.floor(Math.random() * validMoves.length)];
-        [positions[emptyIndex], positions[moveIndex]] = [positions[moveIndex], positions[emptyIndex]];
-      }
+    // ✅ Soft cheat protection: If previous round not done → redirect to index
+    if (!sessionStorage.getItem("round4Done")) {
+      window.location.href = "index.html";
     }
 
-    shuffleEasy();
+    function checkAnswers() {
+      const inputs = document.querySelectorAll('.answers input');
+      let userAnswers = [];
+      let correctCount = 0;
 
-    function createTiles() {
-      puzzle.innerHTML = "";
-      positions.forEach((pos, i) => {
-        const tile = document.createElement("div");
-        if (pos !== null) {
-          tile.classList.add("tile");
-          const x = pos % 3;
-          const y = Math.floor(pos / 3);
-          tile.style.backgroundPosition = `-${x * 100}px -${y * 100}px`;
-          tile.addEventListener("click", () => moveTile(i));
+      inputs.forEach((input) => {
+        const value = input.value.trim().toLowerCase();
+        userAnswers.push(value);
+
+        if (correct.includes(value)) {
+          input.classList.add("correct");
+          input.classList.remove("wrong");
+          correctCount++;
+        } else if (value !== "") {
+          input.classList.add("wrong");
+          input.classList.remove("correct");
         } else {
-          tile.classList.add("empty");
+          input.classList.remove("correct", "wrong");
         }
-        puzzle.appendChild(tile);
       });
-    }
 
-    function moveTile(index) {
-      const emptyIndex = positions.indexOf(null);
-      const validMoves = [emptyIndex - 1, emptyIndex + 1, emptyIndex - 3, emptyIndex + 3];
-      if (validMoves.includes(index)) {
-        [positions[index], positions[emptyIndex]] = [positions[emptyIndex], positions[index]];
-        createTiles();
-        checkWin();
+      // ✅ All answers correct → move to next round
+      if (correct.every(ans => userAnswers.includes(ans.toLowerCase()))) {
+        alert("🎉 Congratulations! You solved Round 5. Moving to Round 6...");
+        sessionStorage.setItem("round5Done", "true"); // mark legit progress
+        setTimeout(() => {
+          window.location.href = "country.html"; // next round
+        }, 800);
+      } else {
+        if (correctCount > 0) {
+          alert("✅ Some answers are correct! Keep going...");
+        } else {
+          alert("❌ All wrong! Try again.");
+        }
       }
     }
-
-    function checkWin() {
-      const solved = [0,1,2,3,4,5,6,7,null];
-      if (JSON.stringify(positions) === JSON.stringify(solved)) {
-        alert("🎉 Congratulations! You solved Round 4. Moving to Round 5...");
-        
-          window.location.href = "country.html";
-        
-      }
-    }
-
-    createTiles();
   </script>
 </body>
 </html>
