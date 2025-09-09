@@ -120,6 +120,7 @@
       }
     });
 
+    // ✅ Store correct answers (all lowercase)
     const answers = {
       q1: "104",
       q2: "20",
@@ -143,6 +144,7 @@
 
     attachTickEvents();
 
+    // ✅ Check answers on submit
     function checkAnswers() {
       const userAnswers = {
         q1: document.getElementById('q1').value.trim().toLowerCase(),
@@ -158,9 +160,9 @@
       
       if (allCorrect) {
         alert("🎉 Congratulations! You completed Round 2. Moving to Round 3...");
-       
-          window.location.href = "crossword.html";
-        
+        setTimeout(() => {
+          window.location.href = "crossword.html"; // ✅ Goes to Round 3
+        }, 800);
       } else {
         messageDiv.textContent = "Some answers are incorrect. Try again!";
       }
