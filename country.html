@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Treasure Hunt -- Round 6</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: orange;
+      font-family: Arial, sans-serif;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+    }
+    header {
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header img {
+      max-height: 200px;
+      max-width: 80%;
+      object-fit: contain;
+    }
+    .game-area {
+      flex: 1;
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      padding: 20px;
+    }
+    h2 {
+      margin-bottom: 15px;
+    }
+    .question {
+      font-size: 40px;
+      margin: 20px 0 10px;
+    }
+    .answers {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+    .answers input {
+      width: 80%;
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 2px solid #ccc;
+      text-align: center;
+      outline: none;
+    }
+    .correct {
+      border: 2px solid green !important;
+      background-color: #e6ffe6;
+    }
+    .wrong {
+      border: 2px solid red !important;
+      background-color: #ffe6e6;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #333;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #555;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div id="college">
+      <img src="logo.png" alt="College Logo">
+    </div>
+    <div id="event">
+      <img src="event_logo.png" alt="Event Logo">
+    </div>
+  </header>
+
+  <div class="game-area">
+    <h2>Round 6</h2>
+    <h2>Guess The Countries From The Emojis!</h2>
+
+    <div class="answers">
+      <div class="question">👁+🏃=</div>
+      <input type="text" placeholder="Answer 1">
+
+      <div class="question">🇺+ 🦢=</div>
+      <input type="text" placeholder="Answer 2">
+
+      <div class="question">🔔+🏋=</div>
+      <input type="text" placeholder="Answer 3">
+    </div>
+    
+    <button onclick="checkAnswers()">Submit</button>
+  </div>
+
+  <script>
+    const correct = ["iran", "ukraine", "belgium"];
+
+    // ✅ Anti-cheat: block if tab changes/minimized
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        window.location.href = "index.html";
+      }
+    });
+
+    // ✅ Anti-cheat: only allow access if coming from previous round
+    if (!document.referrer.includes("round5")) {
+      window.location.href = "index.html";
+    }
+
+    function checkAnswers() {
+      const inputs = document.querySelectorAll('.answers input');
+      let userAnswers = [];
+      let correctCount = 0;
+
+      inputs.forEach((input, i) => {
+        const value = input.value.trim().toLowerCase();
+        userAnswers.push(value);
+
+        if (value === correct[i]) {
+          input.classList.add("correct");
+          input.classList.remove("wrong");
+          correctCount++;
+        } else if (value !== "") {
+          input.classList.add("wrong");
+          input.classList.remove("correct");
+        } else {
+          input.classList.remove("correct", "wrong");
+        }
+      });
+
+      // ✅ All answers correct → move to next round
+      if (correct.every((ans, i) => userAnswers[i] === ans)) {
+        alert("🎉 Correct! Moving to Round 7...");
+        window.location.href = "tictactoe.html"; // next round
+      } else {
+        if (correctCount > 0) {
+          alert("✅ Some answers are correct! Keep going...");
+        } else {
+          alert("❌ All wrong! Try again.");
+        }
+      }
+    }
+  </script>
+</body>
+</html>
