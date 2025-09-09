@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Treasure Hunt — Round 1</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: orange;
+      font-family: Arial, sans-serif;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header img {
+      max-height: 150px;
+      max-width: 60%;
+    }
+
+    .game-area {
+      flex: 1;
+      width: 100%;
+      max-width: 480px;
+      position: relative;
+      padding: 10px;
+    }
+
+    .images {
+      display: flex;
+      gap: 5px;
+    }
+
+    .images img {
+      width: 50%;
+      height: auto;
+      display: block;
+    }
+
+    .marker {
+      position: absolute;
+      border: 3px solid lime;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      background-color: rgba(0, 255, 0, 0.4);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="College Logo">
+    <img src="event_logo.png" alt="Event Logo">
+  </header>
+
+  <div class="game-area">
+    <div class="images">
+      <img id="img1" src="https://iili.io/dUCXcG9.jpg" alt="Image 1">
+      <img id="img2" src="https://iili.io/dUCVIPn.jpg" alt="Image 2">
+    </div>
+  </div>
+
+  <script>
+    // Differences are defined using percentage positions (relative to image width/height)
+    const differences = [
+      { x: 48, y: 39, found: false },
+       { x: 59, y: 71, found: false },
+       { x: 39, y: 73, found: false },
+    ];
+
+    let foundCount = 0;
+
+    function handleImageClick(e, imageElement) {
+      const rect = imageElement.getBoundingClientRect();
+      const clickX = ((e.clientX - rect.left) / rect.width) * 100;
+      const clickY = ((e.clientY - rect.top) / rect.height) * 100;
+
+      differences.forEach(diff => {
+        if (!diff.found) {
+          const dx = diff.x - clickX;
+          const dy = diff.y - clickY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 5) { // 5% threshold
+            diff.found = true;
+            foundCount++;
+
+            const marker = document.createElement("div");
+            marker.className = "marker";
+            marker.style.left = ${e.clientX}px;
+            marker.style.top = ${e.clientY}px;
+            document.body.appendChild(marker);
+
+            if (foundCount === differences.length) {
+              setTimeout(() => {
+                window.location.href = "quiz.html"; // redirect when all found
+              }, 500);
+            }
+          }
+        }
+      });
+    }
+
+    document.getElementById("img1").addEventListener("click", e => handleImageClick(e, e.target));
+    document.getElementById("img2").addEventListener("click", e => handleImageClick(e, e.target));
+  </script>
+</body>
+</html>
