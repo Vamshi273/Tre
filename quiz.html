@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Treasure Hunt — Round 2</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #FFA500; /* Orange background for round 2 */
+      font-family: Arial, sans-serif;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+    }
+
+    header {
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header img {
+      max-height: 150px;
+      max-width: 60%;
+    }
+
+    .quiz-container {
+      flex: 1;
+      width: 100%;
+      max-width: 480px;
+      padding: 20px;
+    }
+
+    .question {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .tick {
+      position: absolute;
+      right: 10px;
+      top: 40px;
+      font-size: 20px;
+      color: limegreen;
+      display: none;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #fff;
+      color: #4CAF50;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .message {
+      margin-top: 15px;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="logo.png" alt="College Logo">
+    <img src="event_logo.png" alt="Event Logo">
+  </header>
+  <h2>Round 2</h2>
+  <h2>Quiz</h2>
+  <div class="quiz-container">
+    <div class="question">
+      <label for="q1">1. How many keys does a standard computer keyboard have?</label>
+      <input type="text" id="q1" placeholder="Your answer here">
+      <span class="tick" id="tick1">✅</span>
+    </div>
+
+    <div class="question">
+      <label for="q2">2. A computer prints all numbers from 1 to 100. How many times does the digit 7 appear?</label>
+      <input type="text" id="q2" placeholder="Your answer here">
+      <span class="tick" id="tick2">✅</span>
+    </div>
+
+    <div class="question">
+      <label for="q3">3. Which was the first electronic computer?</label>
+      <input type="text" id="q3" placeholder="Your answer here">
+      <span class="tick" id="tick3">✅</span>
+    </div>
+
+    <button onclick="checkAnswers()">Submit Answers</button>
+    <div class="message" id="message"></div>
+  </div>
+
+  <script>
+    // ✅ Anti-cheat: redirect if user switches tab or minimizes
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        window.location.href = "index.html";
+      }
+    });
+
+    const answers = {
+      q1: "104",
+      q2: "20",
+      q3: "eniac"
+    };
+
+    // ✅ Show tick mark instantly when answer matches
+    function attachTickEvents() {
+      Object.keys(answers).forEach((id, index) => {
+        const input = document.getElementById(id);
+        const tick = document.getElementById("tick" + (index + 1));
+        input.addEventListener("input", () => {
+          if (input.value.trim().toLowerCase() === answers[id]) {
+            tick.style.display = "inline";
+          } else {
+            tick.style.display = "none";
+          }
+        });
+      });
+    }
+
+    attachTickEvents();
+
+    function checkAnswers() {
+      const userAnswers = {
+        q1: document.getElementById('q1').value.trim().toLowerCase(),
+        q2: document.getElementById('q2').value.trim().toLowerCase(),
+        q3: document.getElementById('q3').value.trim().toLowerCase()
+      };
+
+      const allCorrect = userAnswers.q1 === answers.q1 &&
+                         userAnswers.q2 === answers.q2 &&
+                         userAnswers.q3 === answers.q3;
+
+      const messageDiv = document.getElementById('message');
+      
+      if (allCorrect) {
+        alert("🎉 Congratulations! You completed Round 2. Moving to Round 3...");
+        setTimeout(() => {
+          window.location.href = "crossword.html";
+        }, 800);
+      } else {
+        messageDiv.textContent = "Some answers are incorrect. Try again!";
+      }
+    }
+  </script>
+</body>
+</html>
