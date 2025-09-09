@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Treasure Hunt -- Round 9</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: green;
+      font-family: Arial, sans-serif;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      align-items: center;
+    }
+    header {
+      width: 100%;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header img {
+      max-height: 200px;
+      max-width: 80%;
+      object-fit: contain;
+    }
+    .game-area {
+      flex: 1;
+      width: 100%;
+      max-width: 480px;
+      text-align: center;
+      padding: 20px;
+    }
+    h2 {
+      margin-bottom: 15px;
+      font-size: 28px;
+    }
+    .hint {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+    .instructions {
+      font-size: 16px;
+      margin-bottom: 20px;
+      text-align: left;
+      background: rgba(0,0,0,0.4);
+      padding: 10px;
+      border-radius: 10px;
+    }
+    input {
+      width: 80%;
+      padding: 10px;
+      font-size: 18px;
+      border-radius: 5px;
+      border: none;
+      background-color: black;
+      color: white;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #fff;
+      color: green;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #ddd;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div id="college">
+      <img src="logo.png" alt="College Logo">
+    </div>
+    <div id="event">
+      <img src="event_logo.png" alt="Event Logo">
+    </div>
+  </header>
+
+  <div class="game-area">
+    <h2>Round 9</h2>
+    <h2>Spot the Room</h2>
+    <div class="hint">Hint: What has keys but can't open locks?</div>
+
+    <div class="instructions">
+      <p><strong>Instructions:</strong></p>
+      <ol>
+        <li>Solve the question written on the board.</li>
+        <li>Find the answer that contains a circle in it.</li>
+      </ol>
+    </div>
+
+    <input type="text" id="answer" placeholder="Enter your answer here">
+
+    <br>
+    <button onclick="checkAnswer()">Submit</button>
+  </div>
+
+  <script>
+    // ✅ Anti-cheat: redirect if user switches tab or minimizes
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        window.location.href = "index.html";
+      }
+    });
+
+    // Normalize input: remove spaces, lowercase everything
+    function normalizeInput(str) {
+      return str.toLowerCase().replace(/\s+/g, "");
+    }
+
+    function checkAnswer() {
+      const userInput = document.getElementById("answer").value;
+      const correctAnswer = "satyajitray"; // expected answer
+
+      if (normalizeInput(userInput) === correctAnswer) {
+        alert("🎉 Correct! Moving to Round 10...");
+        window.location.href = "avengers.html"; 
+      } else {
+        alert("❌ Wrong answer. Try again!");
+      }
+    }
+  </script>
+</body>
+</html>
