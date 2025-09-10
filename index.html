@@ -41,12 +41,14 @@
     .images {
       display: flex;
       gap: 5px;
+      position: relative;
     }
 
     .images img {
       width: 50%;
       height: auto;
       display: block;
+      cursor: pointer;
     }
 
     .marker {
@@ -78,8 +80,8 @@
     // Differences are defined using percentage positions (relative to image width/height)
     const differences = [
       { x: 48, y: 39, found: false },
-       { x: 59, y: 71, found: false },
-       { x: 39, y: 73, found: false },
+      { x: 59, y: 71, found: false },
+      { x: 39, y: 73, found: false },
     ];
 
     let foundCount = 0;
@@ -101,9 +103,9 @@
 
             const marker = document.createElement("div");
             marker.className = "marker";
-            marker.style.left = ${e.clientX}px;
-            marker.style.top = ${e.clientY}px;
-            document.body.appendChild(marker);
+            marker.style.left = `${clickX}%`;
+            marker.style.top = `${clickY}%`;
+            imageElement.parentElement.appendChild(marker);
 
             if (foundCount === differences.length) {
               setTimeout(() => {
