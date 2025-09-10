@@ -34,14 +34,14 @@
       flex: 1;
       width: 100%;
       max-width: 480px;
-      position: relative;
+      position: relative; /* important for absolute positioning */
       padding: 10px;
     }
 
     .images {
       display: flex;
       gap: 5px;
-      position: relative;
+      width: 100%;
     }
 
     .images img {
@@ -69,7 +69,7 @@
     <img src="event_logo.png" alt="Event Logo">
   </header>
 
-  <div class="game-area">
+  <div class="game-area" id="gameArea">
     <div class="images">
       <img id="img1" src="https://iili.io/dUCXcG9.jpg" alt="Image 1">
       <img id="img2" src="https://iili.io/dUCVIPn.jpg" alt="Image 2">
@@ -77,7 +77,6 @@
   </div>
 
   <script>
-    // Differences are defined using percentage positions (relative to image width/height)
     const differences = [
       { x: 48, y: 39, found: false },
       { x: 59, y: 71, found: false },
@@ -87,7 +86,10 @@
     let foundCount = 0;
 
     function handleImageClick(e, imageElement) {
+      const gameArea = document.getElementById("gameArea");
       const rect = imageElement.getBoundingClientRect();
+
+      // click position relative to image in percentage
       const clickX = ((e.clientX - rect.left) / rect.width) * 100;
       const clickY = ((e.clientY - rect.top) / rect.height) * 100;
 
@@ -95,21 +97,28 @@
         if (!diff.found) {
           const dx = diff.x - clickX;
           const dy = diff.y - clickY;
-          const distance = Math.sqrt(dx * dx + dy * dy);
+          const distance = Math.sqrt(dx*dx + dy*dy);
 
-          if (distance < 5) { // 5% threshold
+          if (distance < 5) {
             diff.found = true;
             foundCount++;
 
+            // create marker
             const marker = document.createElement("div");
             marker.className = "marker";
-            marker.style.left = `${clickX}%`;
-            marker.style.top = `${clickY}%`;
-            imageElement.parentElement.appendChild(marker);
+
+            // position marker relative to the clicked image
+            const markerX = rect.left + (clickX / 100) * rect.width - gameArea.getBoundingClientRect().left;
+            const markerY = rect.top + (clickY / 100) * rect.height - gameArea.getBoundingClientRect().top;
+
+            marker.style.left = `${markerX}px`;
+            marker.style.top = `${markerY}px`;
+
+            gameArea.appendChild(marker);
 
             if (foundCount === differences.length) {
               setTimeout(() => {
-                window.location.href = "quiz.html"; // redirect when all found
+                window.location.href = "quiz.html";
               }, 500);
             }
           }
